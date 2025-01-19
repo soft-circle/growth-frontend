@@ -19,6 +19,7 @@
     },
     "import/parsers": { "@typescript-eslint/parser": [".ts"] }
   },
+  "ignorePatterns": ["/src/components/ui"],
   "rules": {
     "import/order": [
       "error",
