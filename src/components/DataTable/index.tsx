@@ -54,8 +54,6 @@ function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-  console.log({ table });
-  console.log(table.getRowModel());
 
   return (
     <div className="rounded-md border">

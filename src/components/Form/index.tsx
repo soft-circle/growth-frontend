@@ -4,11 +4,13 @@ import {
   FieldValues,
   UseFormProps,
   SubmitHandler,
+  UseFormReturn,
 } from 'react-hook-form';
+import { isFunction } from 'lodash';
 
 interface FormProps<TFieldValues extends FieldValues> extends UseFormProps<TFieldValues> {
   onSubmit?: SubmitHandler<TFieldValues>;
-  children: React.ReactNode;
+  children: (form: UseFormReturn<TFieldValues>) => React.ReactNode | React.ReactNode;
 }
 
 function Form<TFieldValues extends FieldValues>({
@@ -22,9 +24,14 @@ function Form<TFieldValues extends FieldValues>({
   return (
     <FormProvider {...form}>
       <form
+        className="space-y-4"
         onSubmit={onSubmit ? form.handleSubmit(onSubmit) : undefined}
       >
-        {children}
+        {
+          isFunction(children)
+            ? children(form)
+            : children
+        }
       </form>
     </FormProvider>
   );
