@@ -1,11 +1,12 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { uniqBy } from 'lodash';
 import TextBlock from '../TextBlock';
 import FormFieldLabeled, {
   FormFieldLabeledProps,
 } from '../FormFieldLabeled';
 
 export interface FileFieldProps extends
-  Omit<React.ComponentProps<'input'>, 'name' | 'defaultValue' | 'type'>,
+  Omit<React.ComponentProps<'input'>, 'name' | 'value' | 'onChange' | 'defaultValue' | 'type'>,
   Omit<FormFieldLabeledProps, 'children'> {}
 
 export default function FileField({
@@ -14,9 +15,9 @@ export default function FileField({
   ...props
 }: FileFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [stateFiles, setStateFiles] = useState<File[]>([]);
   return (
     <FormFieldLabeled
-      defaultValue={multiple ? [] : ''}
       {...props}
     >
       {({ field }) => {
@@ -64,11 +65,18 @@ export default function FileField({
               >
                 <input
                   type="file"
-                  value={multiple ? values : value[0]}
                   onChange={(e) => {
                     const { files } = e.target;
                     if (!files || files?.length === 0) return;
-                    field.onChange(multiple ? Array.from(files) : files[0]);
+                    const newFiles = (
+                      multiple
+                        ? uniqBy([...stateFiles, ...Array.from(files)], 'name')
+                        : Array.from(files)
+                    );
+                    setStateFiles(newFiles);
+                    field.onChange(newFiles);
+                    // reset input value
+                    e.target.value = '';
                   }}
                   multiple={multiple}
                   ref={(ele) => {
@@ -96,13 +104,20 @@ export default function FileField({
               </button>
             </div>
             {
-              (
-                multiple
-                  ? value || []
-                  : value ? [value] : []
-              ).map((v) => (
-                <div>
-                  {v.name}
+              stateFiles.map((file) => (
+                <div key={file.name}>
+                  {
+                    file.type.includes('image')
+                      ? (
+                        <img
+                          src={URL.createObjectURL(file)}
+                          width={100}
+                          height={100}
+                          alt="preview"
+                        />
+                      )
+                      : file.name
+                  }
                 </div>
               ))
             }
