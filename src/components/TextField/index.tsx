@@ -3,7 +3,7 @@ import FormFieldLabeled, {
   FormFieldLabeledProps,
 } from '../FormFieldLabeled';
 
-export interface TextFieldProps extends Omit<React.ComponentProps<'input'>, 'defaultValue' | 'name'>, Omit<FormFieldLabeledProps, 'children'> {}
+export interface TextFieldProps extends Omit<FormFieldLabeledProps, 'children'> {}
 
 export default function TextField({
   ...props
@@ -14,7 +14,6 @@ export default function TextField({
     >
       {({ field }) => (
         <Input
-          {...props}
           {...field}
         />
       )}

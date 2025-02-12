@@ -6,8 +6,9 @@ import Button from '@/components/Button';
 import FieldLabel from '@/components/FieldLabel';
 import Partition from '@/components/Partition';
 import TextBlock from '@/components/TextBlock';
-import NumberField from '@/components/NumberField';
 import RadioGroupField from '@/components/RadioGroupField';
+import ToggleGroupField from '@/components/ToggleGroupField';
+import ChipsTextField from '@/components/ChipsTextField';
 
 const markets = [
   { id: 'coupangGrowth', name: '쿠팡 그로스' },
@@ -74,7 +75,7 @@ function ProductCreateForm() {
                       </TextBlock>
                     </Partition.Side>
                     <Partition.Main>
-                      <NumberField
+                      <TextField
                         name={`marketProductCode.${market.id}`}
                       />
                     </Partition.Main>
@@ -90,6 +91,21 @@ function ProductCreateForm() {
               { value: 'c', label: '법인' },
               { value: 'i', label: '개인' },
             ]}
+          />
+          <ToggleGroupField
+            name="seasonMonths"
+            label="시즌"
+            options={Array.from(Array(12)).map((_, i) => ({
+              value: `${i + 1}`,
+              label: `${i + 1}월`,
+            }))}
+            variant="outline"
+            size="sm"
+            fitted
+            multiple
+          />
+          <ChipsTextField
+            name="seasonThemes"
           />
           <div>
             <FieldLabel>
@@ -121,7 +137,7 @@ function ProductCreateForm() {
                                 </TextBlock>
                               </Partition.Side>
                               <Partition.Main>
-                                <NumberField
+                                <TextField
                                   name={`options.${i}.marketProductOptionCode.${market.id}`}
                                 />
                               </Partition.Main>

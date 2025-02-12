@@ -3,9 +3,9 @@ interface ContainerProps extends React.PropsWithChildren {
 }
 
 const sizeClasses: Record<NonNullable<ContainerProps['size']>, string> = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
+  sm: 'max-w-md',
+  md: 'max-w-xl',
+  lg: 'max-w-3xl',
   full: 'max-w-full',
 };
 
