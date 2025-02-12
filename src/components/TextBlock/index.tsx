@@ -1,6 +1,7 @@
 export interface TextBlockProps extends React.PropsWithChildren {
   typography?: 'body.xs' | 'body.sm' | 'body.md' | 'body.lg' | 'heading.xs' | 'heading.sm' | 'heading.md' | 'heading.lg' | 'heading.xl';
   weight?: 'regular' | 'medium' | 'semiBold' | 'bold';
+  align?: 'left' | 'center' | 'right';
 }
 
 const typographyClassNames: Record<NonNullable<TextBlockProps['typography']>, string> = {
@@ -22,13 +23,20 @@ const weightClassNames: Record<NonNullable<TextBlockProps['weight']>, string> = 
   bold: 'font-bold',
 };
 
+const alignClassNames: Record<NonNullable<TextBlockProps['align']>, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+
 export default function TextBlock({
   typography = 'body.md',
   weight = 'medium',
+  align = 'left',
   children,
 }: TextBlockProps) {
   return (
-    <div className={`${typographyClassNames[typography]} ${weightClassNames[weight]}`}>
+    <div className={`${typographyClassNames[typography]} ${weightClassNames[weight]} ${alignClassNames[align]}`}>
       {children}
     </div>
   );
