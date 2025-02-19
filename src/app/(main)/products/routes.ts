@@ -7,6 +7,6 @@ export default [
   },
   {
     title: '상품 등록',
-    url: '/products/add',
+    url: '/products/create',
   },
 ];

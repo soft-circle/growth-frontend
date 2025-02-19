@@ -10,26 +10,14 @@
  */
 
 export interface ProductCreateDTO {
-  name?: string;
+  name: string;
   brandName?: string;
-  growthDisplayName?: string;
   growthProductCode?: string;
-  growthHashTags?: string[];
-  coupangDisplayName?: string;
   coupangProductCode?: string;
-  coupangHashTags?: string[];
-  naverDisplayName?: string;
   naverProductCode?: string;
-  naverHashTags?: string[];
-  gmarketDisplayName?: string;
   gmarketProductCode?: string;
-  gmarketHashTags?: string[];
-  auctionDisplayName?: string;
   auctionProductCode?: string;
-  auctionHashTags?: string[];
-  elevenStreetDisplayName?: string;
   elevenStreetProductCode?: string;
-  elevenStreetHashTags?: string[];
   accountType?: string;
   seasonMonths?: string[];
   seasonThemes?: string[];
@@ -79,4 +67,10 @@ export interface CreateProductPayload {
   growthBarcodeImages?: File[];
 }
 
-export type CreateProductData = string;
+export type CreateProductData = ProductCreateDTO;
+
+export interface CreateProduct2Payload {
+  dto: ProductCreateDTO;
+}
+
+export type CreateProduct2Data = string;

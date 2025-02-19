@@ -74,7 +74,7 @@ export default function FileField({
                         : Array.from(files)
                     );
                     setStateFiles(newFiles);
-                    field.onChange(newFiles);
+                    field.onChange(multiple ? newFiles : newFiles[0]);
                     // reset input value
                     e.target.value = '';
                   }}

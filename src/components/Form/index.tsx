@@ -24,7 +24,7 @@ function Form<TFieldValues extends FieldValues>({
   return (
     <FormProvider {...form}>
       <form
-        className="space-y-4"
+        className="space-y-6"
         onSubmit={onSubmit ? form.handleSubmit(onSubmit) : undefined}
       >
         {

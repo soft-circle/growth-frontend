@@ -3,7 +3,9 @@ import FormFieldLabeled, {
   FormFieldLabeledProps,
 } from '../FormFieldLabeled';
 
-export interface NumberFieldProps extends Omit<React.ComponentProps<'input'>, 'defaultValue' | 'name'>, Omit<FormFieldLabeledProps<number>, 'children'> {}
+export interface NumberFieldProps extends
+  Omit<React.ComponentProps<'input'>, 'defaultValue' | 'name'>,
+  Omit<FormFieldLabeledProps<number>, 'children'> {}
 
 export default function NumberField({
   ...props
@@ -14,6 +16,7 @@ export default function NumberField({
     >
       {({ field }) => (
         <Input
+          className="bg-white"
           {...props}
           {...field}
           value={field.value ? Number(`${field.value}`.replace(/[^0-9]/g, '')) : ''}
