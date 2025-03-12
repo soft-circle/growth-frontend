@@ -2,7 +2,8 @@
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "react", 
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "import"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
@@ -13,35 +14,33 @@
     "airbnb",
     "airbnb-typescript"
   ],
-  "settings": {
-    "import/resolver": {
-      "typescript": {}
-    },
-    "import/parsers": { "@typescript-eslint/parser": [".ts"] }
-  },
   "ignorePatterns": ["/src/components/ui"],
   "rules": {
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          "type",
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index",
-          "unknown"
-        ]
-      }
-    ],
+    "no-nested-ternary": 0,
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": 0,
     "react/prop-types": 0,
     "react/require-default-props": 0,
     "react/no-unstable-nested-components": 0,
-    "no-nested-ternary": 0
+    "import/order": [
+      2,
+      {
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc"
+        },
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "unknown",
+          "type"
+        ]
+      }
+    ]
   }
 }
