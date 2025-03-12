@@ -36,7 +36,7 @@ function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data,
     columns,
     onSortingChange: setSorting,

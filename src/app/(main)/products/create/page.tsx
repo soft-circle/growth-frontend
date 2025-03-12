@@ -1,30 +1,39 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import Container from '@/components/Container';
-import TextField from '@/components/TextField';
-import Form from '@/components/Form';
+
+import { HttpClient } from '@/api/http-client';
 import Button from '@/components/Button';
+import Container from '@/components/Container';
 import FieldLabel from '@/components/FieldLabel';
-import Partition from '@/components/Partition';
-import TextBlock from '@/components/TextBlock';
-import RadioGroupField from '@/components/RadioGroupField';
-import ToggleGroupField from '@/components/ToggleGroupField';
 import FileField from '@/components/FileField';
+import Form from '@/components/Form';
 import FormFieldArray from '@/components/FormFieldArray';
 import NumberField from '@/components/NumberField';
+import Partition from '@/components/Partition';
+import RadioGroupField from '@/components/RadioGroupField';
+import Table, {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/Table';
+import TextBlock from '@/components/TextBlock';
+import TextField from '@/components/TextField';
+import ToggleGroupField from '@/components/ToggleGroupField';
+
 import type {
   ProductCreateDTO,
   ProductOptionCreateDTO,
 } from '@/api/data-contracts';
-import { HttpClient } from '@/api/http-client';
 
 type ProductCreateFormValues = Omit<ProductCreateDTO, 'options'> & {
-  options: (Omit<ProductOptionCreateDTO, 'optionImage'| 'growthBarcodeImage'> & {
+  options: (Omit<ProductOptionCreateDTO, 'optionImage' | 'growthBarcodeImage'> & {
     optionImage?: File;
     growthBarcodeImage?: File;
   })[];
-}
+};
 
 // TODO: enum
 const markets = [
@@ -35,7 +44,6 @@ const markets = [
   { id: 'auction', name: '옥션' },
   { id: 'elevenStreet', name: '11번가' },
 ];
-
 
 const productOptionDefaultValues: ProductCreateFormValues['options'][number] = {
   name: '',
@@ -66,9 +74,9 @@ function ProductAdd() {
   const createProductMutation = useMutation({
     mutationFn: async (data: ProductCreateFormValues) => {
       const { options = [], ...productData } = data;
-      const formData = new FormData(); 
+      const formData = new FormData();
       formData.append(
-        'dto', 
+        'dto',
         JSON.stringify({
           ...productData,
           options: options.map(({ optionImage, growthBarcodeImage, ...option }) => ({
@@ -76,23 +84,23 @@ function ProductAdd() {
             optionImage: optionImage?.name,
             growthBarcodeImage: growthBarcodeImage?.name,
           })),
-        })
+        }),
       );
       options.forEach((option) => {
         if (option.optionImage) {
-          formData.append('optionImages', option.optionImage)
+          formData.append('optionImages', option.optionImage);
         }
         if (option.growthBarcodeImage) {
           formData.append('growthBarcodeImages', option.growthBarcodeImage);
         }
-      })
+      });
       const httpClient = new HttpClient();
       httpClient.request({
         path: '/products/create',
         method: 'POST',
         body: formData,
-        format: 'formdata'
-      })
+        format: 'formdata',
+      });
     },
   });
 
@@ -112,6 +120,7 @@ function ProductAdd() {
           seasonMonths: [],
           seasonThemes: [],
           originalSeller: '',
+          options: [productOptionDefaultValues],
         }}
         onSubmit={(values) => {
           createProductMutation.mutate(values);
@@ -131,24 +140,42 @@ function ProductAdd() {
               <FieldLabel>
                 마켓별 상품코드
               </FieldLabel>
-              <div className="space-y-2">
-                {
-                  markets.map((market) => (
-                    <Partition key={market.id} space={2} valign="center">
-                      <Partition.Side className="w-20">
-                        <TextBlock typography="body.xs">
-                          {market.name}
-                        </TextBlock>
-                      </Partition.Side>
-                      <Partition.Main>
-                        <TextField
-                          name={`${market.id}ProductCode`}
-                          placeholder="상품코드"
-                        />
-                      </Partition.Main>
-                    </Partition>
-                  ))
-                }
+              <div className="border border-input rounded-md">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="min-w-24" />
+                      {
+                        markets.map((market) => (
+                          <TableHead
+                            key={market.id}
+                            className="min-w-40"
+                          >
+                            {market.name}
+                          </TableHead>
+                        ))
+                      }
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        상품코드
+                      </TableCell>
+                      {
+                        markets.map((market) => (
+                          <TableCell
+                            key={market.id}
+                          >
+                            <TextField
+                              name={`${market.id}ProductCode`}
+                            />
+                          </TableCell>
+                        ))
+                      }
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </div>
             </div>
             <RadioGroupField
@@ -201,81 +228,172 @@ function ProductAdd() {
                               label="옵션 이미지"
                               accept="image/*"
                             />
-                            {/* <div>
-                              <FieldLabel>
-                                마켓별 옵션코드
-                              </FieldLabel>
-                              <div className="space-y-2">
-                                {
-                                  markets.map((market) => (
-                                    <Partition key={market.id} space={2} valign="center">
-                                      <Partition.Side className="w-20">
-                                        <TextBlock typography="body.xs">
-                                          {market.name}
-                                        </TextBlock>
-                                      </Partition.Side>
-                                      <Partition.Main>
-                                        <TextField
-                                          name={`options.${i}.${market.id}ProductOptionCode`}
-                                        />
-                                      </Partition.Main>
-                                    </Partition>
-                                  ))
-                                }
-                              </div>
-                            </div>
-                            <div>
-                              <FieldLabel>
-                                판매단위
-                              </FieldLabel>
-                              <div className="space-y-2">
-                                {
-                                  markets.map((market) => (
-                                    <Partition key={market.id} space={2} valign="center">
-                                      <Partition.Side className="w-20">
-                                        <TextBlock typography="body.xs">
-                                          {market.name}
-                                        </TextBlock>
-                                      </Partition.Side>
-                                      <Partition.Main>
-                                        <NumberField
-                                          name={`options.${i}.${market.id}SalesUnit`}
-                                        />
-                                      </Partition.Main>
-                                    </Partition>
-                                  ))
-                                }
-                              </div>
-                            </div> */} 
                             <div>
                               <FieldLabel>
                                 규격
                               </FieldLabel>
-                              <NumberField 
-                                name="width"
-                                label="가로(mm)"
-                              />
-                              <NumberField 
-                                name="length"
-                                label="세로(mm)"
-                              />
-                              <NumberField 
-                                name="height"
-                                label="높이(mm)"
-                              />
-                              <NumberField 
-                                name="weight"
-                                label="무게(g)"
-                              />
+                              <div className="space-y-2">
+                                <Partition space={2} valign="center">
+                                  <Partition.Side className="w-10">
+                                    <TextBlock typography="body.xs">
+                                      가로
+                                    </TextBlock>
+                                  </Partition.Side>
+                                  <Partition.Main>
+                                    <NumberField
+                                      name={`options.${i}.width`}
+                                    />
+                                  </Partition.Main>
+                                </Partition>
+                                <Partition space={2} valign="center">
+                                  <Partition.Side className="w-10">
+                                    <TextBlock typography="body.xs">
+                                      세로
+                                    </TextBlock>
+                                  </Partition.Side>
+                                  <Partition.Main>
+                                    <NumberField
+                                      name={`options.${i}.length`}
+                                    />
+                                  </Partition.Main>
+                                </Partition>
+                                <Partition space={2} valign="center">
+                                  <Partition.Side className="w-10">
+                                    <TextBlock typography="body.xs">
+                                      높이
+                                    </TextBlock>
+                                  </Partition.Side>
+                                  <Partition.Main>
+                                    <NumberField
+                                      name={`options.${i}.height`}
+                                    />
+                                  </Partition.Main>
+                                </Partition>
+                                <Partition space={2} valign="center">
+                                  <Partition.Side className="w-10">
+                                    <TextBlock typography="body.xs">
+                                      무게
+                                    </TextBlock>
+                                  </Partition.Side>
+                                  <Partition.Main>
+                                    <NumberField
+                                      name={`options.${i}.weight`}
+                                    />
+                                  </Partition.Main>
+                                </Partition>
+                              </div>
                             </div>
-                            <NumberField 
-                              name="customerDeliveryFee"
+                            <NumberField
+                              name={`options.${i}.customerDeliveryFee`}
                               label="고객배송비"
                             />
-                            <TextField 
-                              name="warehouseSection"
+                            <TextField
+                              name={`options.${i}.warehouseSection`}
                               label="창고 섹션 번호"
                             />
+                            <div>
+                              <FieldLabel>
+                                마켓별 옵션 정보
+                              </FieldLabel>
+                              <div className="border border-input rounded-md">
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead className="min-w-24" />
+                                      {
+                                        markets.map((market) => (
+                                          <TableHead
+                                            key={market.id}
+                                            className="min-w-40"
+                                          >
+                                            {market.name}
+                                          </TableHead>
+                                        ))
+                                      }
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>
+                                        옵션코드
+                                      </TableCell>
+                                      {
+                                        markets.map((market) => (
+                                          <TableCell
+                                            key={market.id}
+                                          >
+                                            <TextField
+                                              name={`options.${i}.${market.id}ProductOptionCode`}
+                                            />
+                                          </TableCell>
+                                        ))
+                                      }
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        판매 단위
+                                      </TableCell>
+                                      {
+                                        markets.map((market) => (
+                                          <TableCell
+                                            key={market.id}
+                                          >
+                                            <NumberField
+                                              name={`options.${i}.${market.id}SalesUnit`}
+                                            />
+                                          </TableCell>
+                                        ))
+                                      }
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        바코드
+                                      </TableCell>
+                                      {
+                                        markets.map((market) => (
+                                          <TableCell
+                                            key={market.id}
+                                          >
+                                            {
+                                              market.id === 'growth'
+                                                ? (
+                                                  <TextField
+                                                    name={`options.${i}.growthBarcode`}
+                                                  />
+                                                )
+                                                : null
+                                            }
+                                          </TableCell>
+                                        ))
+                                      }
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>
+                                        바코드 이미지
+                                      </TableCell>
+                                      {
+                                        markets.map((market) => (
+                                          <TableCell
+                                            key={market.id}
+                                          >
+                                            {
+                                              market.id === 'growth'
+                                                ? (
+                                                  <FileField
+                                                    name={`options.${i}.growthBarcodeImage`}
+                                                    accept="image/*"
+                                                  />
+                                                )
+                                                : null
+                                            }
+                                          </TableCell>
+                                        ))
+                                      }
+                                    </TableRow>
+                                  </TableBody>
+                                </Table>
+                              </div>
+                            </div>
                           </div>
                         ))
                       }
