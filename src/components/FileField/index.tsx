@@ -1,13 +1,14 @@
-import { useRef, useState } from 'react';
 import { uniqBy } from 'lodash';
-import TextBlock from '../TextBlock';
-import FormFieldLabeled, {
-  FormFieldLabeledProps,
-} from '../FormFieldLabeled';
+import { useRef, useState } from 'react';
+
+import FormField, {
+  FormFieldProps,
+} from '@/components/FormField';
+import TextBlock from '@/components/TextBlock';
 
 export interface FileFieldProps extends
   Omit<React.ComponentProps<'input'>, 'name' | 'value' | 'onChange' | 'defaultValue' | 'type'>,
-  Omit<FormFieldLabeledProps, 'children'> {}
+  Omit<FormFieldProps, 'children'> {}
 
 export default function FileField({
   multiple,
@@ -17,7 +18,7 @@ export default function FileField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [stateFiles, setStateFiles] = useState<File[]>([]);
   return (
-    <FormFieldLabeled
+    <FormField
       {...props}
     >
       {({ field }) => {
@@ -124,6 +125,6 @@ export default function FileField({
           </>
         );
       }}
-    </FormFieldLabeled>
+    </FormField>
   );
 }

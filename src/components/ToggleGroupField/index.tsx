@@ -1,20 +1,26 @@
+import FormField, {
+  FormFieldProps,
+} from '@/components/FormField';
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from '../ui/toggle-group';
-import FormFieldLabeled, {
-  FormFieldLabeledProps,
-} from '../FormFieldLabeled';
+} from '@/components/ui/toggle-group';
 
-export interface ToggleGroupFieldProps extends Omit<FormFieldLabeledProps, 'children'> {
+export interface ToggleGroupFieldProps extends Omit<FormFieldProps<string | string[] | undefined>, 'children'> {
   options: { value: string, label: string }[];
   variant?: 'default' | 'outline';
   size?: 'default' | 'sm' | 'lg';
-  multiple?: boolean;
   fitted?: boolean;
+  multiple?: boolean;
 }
 
 export default function ToggleGroupField({
+  name,
+  defaultValue,
+  rules,
+  shouldUnregister,
+  control,
+  disabled,
   options,
   variant,
   size,
@@ -23,7 +29,13 @@ export default function ToggleGroupField({
   ...props
 }: ToggleGroupFieldProps) {
   return (
-    <FormFieldLabeled
+    <FormField<string | string[] | undefined>
+      name={name}
+      defaultValue={defaultValue}
+      rules={rules}
+      shouldUnregister={shouldUnregister}
+      control={control}
+      disabled={disabled}
       {...props}
     >
       {({ field }) => (
@@ -47,6 +59,6 @@ export default function ToggleGroupField({
           }
         </ToggleGroup>
       )}
-    </FormFieldLabeled>
+    </FormField>
   );
 }

@@ -1,10 +1,10 @@
+import FormField, {
+  FormFieldProps,
+} from '@/components/FormField';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import FormFieldLabeled, {
-  FormFieldLabeledProps,
-} from '../FormFieldLabeled';
 
-export interface RadioGroupFieldProps extends Omit<FormFieldLabeledProps, 'children'> {
+export interface RadioGroupFieldProps extends Omit<FormFieldProps, 'children'> {
   options: { value: string, label: string }[];
 }
 
@@ -13,7 +13,7 @@ export default function RadioGroupField({
   ...props
 }: RadioGroupFieldProps) {
   return (
-    <FormFieldLabeled
+    <FormField
       {...props}
     >
       {({ field }) => (
@@ -34,6 +34,6 @@ export default function RadioGroupField({
           }
         </RadioGroup>
       )}
-    </FormFieldLabeled>
+    </FormField>
   );
 }

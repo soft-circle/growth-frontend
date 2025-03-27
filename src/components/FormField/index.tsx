@@ -1,17 +1,18 @@
+import { isFunction } from 'lodash';
 import {
   ControllerProps,
   FieldPath,
 } from 'react-hook-form';
-import { isFunction } from 'lodash';
+
 import {
   FormDescription,
-  FormField,
+  FormField as BaseFormField,
   FormItem,
+  FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Label } from '../ui/label';
+} from '@/components/ui/form';
 
-export interface FormFieldLabeledProps<
+export interface FormFieldProps<
   TValue = string,
   TName extends FieldPath<Record<string, TValue>> = FieldPath<Record<string, TValue>>,
 > extends Omit<ControllerProps<Record<string, TValue>, TName>, 'render'> {
@@ -20,7 +21,7 @@ export interface FormFieldLabeledProps<
   children: (renderProps: Parameters<ControllerProps<Record<string, TValue>, TName>['render']>[0]) => React.ReactNode | React.ReactNode;
 }
 
-export default function FormFieldLabeled<
+export default function FormField<
   TValue = string,
   TName extends FieldPath<Record<string, TValue>> = FieldPath<Record<string, TValue>>,
 >({
@@ -28,17 +29,17 @@ export default function FormFieldLabeled<
   label,
   description,
   children,
-}: FormFieldLabeledProps<TValue, TName>) {
+}: FormFieldProps<TValue, TName>) {
   return (
-    <FormField<Record<string, TValue>, TName>
+    <BaseFormField<Record<string, TValue>, TName>
       name={name}
       render={({ field, fieldState, formState }) => (
         <FormItem>
           {
             label && (
-              <Label>
+              <FormLabel>
                 {label}
-              </Label>
+              </FormLabel>
             )
           }
           {
